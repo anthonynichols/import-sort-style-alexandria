@@ -1,0 +1,28 @@
+{
+  "name": "import-sort-style-alexandria",
+  "version": "1.0.0",
+  "description": "Alexandria App import-sort style",
+  "author": "Anthony Nichols <hi@anthonynichols.me> (https://github.com/anthonynichols)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthonynichols/import-sort-style-alexandria.git"
+  },
+  "homepage": "https://github.com/anthonynichols/import-sort-style-alexandria#readme",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p src",
+    "prepublish": "npm run build",
+    "watch": "tsc -p src -w"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^8.0.13",
+    "import-sort-parser": "^3.0.0",
+    "import-sort-style": "^3.0.0",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.1"
+  }
+}
