@@ -13,15 +13,26 @@
   "scripts": {
     "build": "tsc -p src",
     "prepublish": "npm run build",
-    "watch": "tsc -p src -w"
+    "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+    "watch": "tsc -p src -w",
+    "watch:test": "mocha -w --compilers ts:ts-node/register,tsx:ts-node/register --recursive test"
   },
   "keywords": [],
   "license": "MIT",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/node": "^8.0.13",
+  "dependencies": {
     "import-sort-parser": "^3.0.0",
-    "import-sort-style": "^3.0.0",
+    "import-sort-style": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.1",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.13",
+    "chai": "^4.1.0",
+    "import-sort": "^3.3.0",
+    "import-sort-parser-babylon": "^3.2.0",
+    "import-sort-parser-typescript": "^3.2.0",
+    "mocha": "^3.4.2",
+    "ts-node": "^3.2.0",
     "tslint": "^5.5.0",
     "typescript": "^2.4.1"
   }

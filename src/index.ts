@@ -66,11 +66,13 @@ export default function(styleApi: IStyleAPI): IStyleItem[] {
     {separator: true},
 
     // import * as _ from "module";
-    {match: and(hasOnlyNamespaceMember, isAbsoluteModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
+    {match: and(hasOnlyNamespaceMember, isAbsoluteModule, not(isAlexandriaModule), not(member(startsWithAlphanumeric))), sort: member(unicode)},
+    // import * as (m|M)odule from "module";
+    {match: and(hasOnlyNamespaceMember, isAbsoluteModule, not(isAlexandriaModule)), sort: member(unicode)},
     // import _, * as (m|M)odule from "module";
-    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
+    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, not(isAlexandriaModule), not(member(startsWithAlphanumeric))), sort: member(unicode)},
     // import (m|M)odule, * as _ from "module";
-    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, or(member(startsWithAlphanumeric), not(member(startsWithAlphanumeric)))), sort: member(unicode)},
+    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, not(isAlexandriaModule), or(member(startsWithAlphanumeric), not(member(startsWithAlphanumeric)))), sort: member(unicode)},
     // import (m|M)odule, * as (o|O)therModule from "module";
     {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, member(startsWithAlphanumeric)), sort: member(unicode)},
     // import _ from "module";
@@ -78,18 +80,20 @@ export default function(styleApi: IStyleAPI): IStyleItem[] {
     // import (m|M)odule from "module";
     {match: and(hasOnlyDefaultMember, isAbsoluteModule, member(startsWithAlphanumeric)), sort: member(unicode)},
     // import _, { (m|M)odule, ... } from "module"
-    {match: and(hasDefaultMember, hasNamedMembers, isAbsoluteModule, not(member(startsWithAlphanumeric))), sortNamedMembers: name(unicode)},
+    {match: and(hasDefaultMember, hasNamedMembers, isAbsoluteModule, not(isAlexandriaModule), not(member(startsWithAlphanumeric))), sortNamedMembers: name(unicode)},
     // import (m|M)odule, { (o|O)therModule, ... } from "module"
-    {match: and(hasDefaultMember, hasNamedMembers, isAbsoluteModule, member(startsWithAlphanumeric)), sort: member(unicode), sortNamedMembers: name(unicode)},
+    {match: and(hasDefaultMember, hasNamedMembers, isAbsoluteModule, not(isAlexandriaModule), member(startsWithAlphanumeric)), sort: member(unicode), sortNamedMembers: name(unicode)},
     // import { _, (m|M)odule, ... } from "module"
-    {match: and(hasOnlyNamedMembers, isAbsoluteModule, not(member(startsWithAlphanumeric))), sort: member(unicode), sortNamedMembers: name(unicode)},
+    {match: and(hasOnlyNamedMembers, isAbsoluteModule, not(isAlexandriaModule), not(member(startsWithAlphanumeric))), sort: member(unicode), sortNamedMembers: name(unicode)},
     // import { (m|M)odule, ... } from "module"
-    {match: and(hasOnlyNamedMembers, isAbsoluteModule, member(startsWithAlphanumeric)), sort: member(unicode), sortNamedMembers: name(unicode)},
+    {match: and(hasOnlyNamedMembers, isAbsoluteModule, not(isAlexandriaModule), member(startsWithAlphanumeric)), sort: member(unicode), sortNamedMembers: name(unicode)},
     
     {separator: true},
 
     // import * as _ from "[Alexandria Module]";
     {match: and(hasOnlyNamespaceMember, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
+    // import * as Module from "[Alexandria Module]";
+    {match: and(hasOnlyNamespaceMember, isAlexandriaModule), sort: member(unicode)},
     // import _, * as (m|M)odule from "[Alexandria Module]";
     {match: and(hasDefaultMember, hasNamespaceMember, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
     // import (m|M)odule, * as _ from "[Alexandria Module]";
@@ -107,7 +111,7 @@ export default function(styleApi: IStyleAPI): IStyleItem[] {
     // import { _, (m|M)odule, ... } from "[Alexandria Module]"
     {match: and(hasOnlyNamedMembers, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode), sortNamedMembers: name(unicode)},
     // import { (m|M)odule, ... } from "[Alexandria Module]"
-    {match: and(hasOnlyNamedMembers, isAlexandriaModule, member(startsWithAlphanumeric)), sort: member(unicode), sortNamedMembers: name(unicode)},
+    {match: and(hasOnlyNamedMembers, isAlexandriaModule), sortNamedMembers: name(unicode)},
 
     {separator: true},
 
