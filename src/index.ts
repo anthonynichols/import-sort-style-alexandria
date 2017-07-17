@@ -1,14 +1,7 @@
 import { IStyleAPI, IStyleItem } from "import-sort-style";
 
 function isAlexandriaModule(imported: IImport) {
-  if (imported.moduleName.startsWith('components')) return true;
-  if (imported.moduleName.startsWith('config')) return true;
-  if (imported.moduleName.startsWith('decorators')) return true;
-  if (imported.moduleName.startsWith('models')) return true;
-  if (imported.moduleName.startsWith('services')) return true;
-  if (imported.moduleName.startsWith('stores')) return true;
-  if (imported.moduleName.startsWith('ui')) return true;
-  if (imported.moduleName.startsWith('utilities')) return true;
+  if (imported.moduleName.startsWith('~')) return true;
   
   return false;
 }
@@ -90,27 +83,27 @@ export default function(styleApi: IStyleAPI): IStyleItem[] {
     
     {separator: true},
 
-    // import * as _ from "[Alexandria Module]";
+    // import * as _ from "~/~/[Alexandria Module]";
     {match: and(hasOnlyNamespaceMember, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
-    // import * as Module from "[Alexandria Module]";
+    // import * as Module from "~/[Alexandria Module]";
     {match: and(hasOnlyNamespaceMember, isAlexandriaModule), sort: member(unicode)},
-    // import _, * as (m|M)odule from "[Alexandria Module]";
+    // import _, * as (m|M)odule from "~/[Alexandria Module]";
     {match: and(hasDefaultMember, hasNamespaceMember, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
-    // import (m|M)odule, * as _ from "[Alexandria Module]";
+    // import (m|M)odule, * as _ from "~/[Alexandria Module]";
     {match: and(hasDefaultMember, hasNamespaceMember, isAlexandriaModule, or(member(startsWithAlphanumeric), not(member(startsWithAlphanumeric)))), sort: member(unicode)},
-    // import (m|M)odule, * as (o|O)therModule from "[Alexandria Module]";
+    // import (m|M)odule, * as (o|O)therModule from "~/[Alexandria Module]";
     {match: and(hasDefaultMember, hasNamespaceMember, isAlexandriaModule, member(startsWithAlphanumeric)), sort: member(unicode)},
-    // import _ from "[Alexandria Module]";
+    // import _ from "~/[Alexandria Module]";
     {match: and(hasOnlyDefaultMember, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode)},
-    // import (m|M)odule from "[Alexandria Module]";
+    // import (m|M)odule from "~/[Alexandria Module]";
     {match: and(hasOnlyDefaultMember, isAlexandriaModule, member(startsWithAlphanumeric)), sort: member(unicode)},
-    // import _, { (m|M)odule, ... } from "[Alexandria Module]"
+    // import _, { (m|M)odule, ... } from "~/[Alexandria Module]"
     {match: and(hasDefaultMember, hasNamedMembers, isAlexandriaModule, not(member(startsWithAlphanumeric))), sortNamedMembers: name(unicode)},
-    // import (m|M)odule, { (o|O)therModule, ... } from "[Alexandria Module]"
+    // import (m|M)odule, { (o|O)therModule, ... } from "~/[Alexandria Module]"
     {match: and(hasDefaultMember, hasNamedMembers, isAlexandriaModule, member(startsWithAlphanumeric)), sort: member(unicode), sortNamedMembers: name(unicode)},
-    // import { _, (m|M)odule, ... } from "[Alexandria Module]"
+    // import { _, (m|M)odule, ... } from "~/[Alexandria Module]"
     {match: and(hasOnlyNamedMembers, isAlexandriaModule, not(member(startsWithAlphanumeric))), sort: member(unicode), sortNamedMembers: name(unicode)},
-    // import { (m|M)odule, ... } from "[Alexandria Module]"
+    // import { (m|M)odule, ... } from "~/[Alexandria Module]"
     {match: and(hasOnlyNamedMembers, isAlexandriaModule), sortNamedMembers: name(unicode)},
 
     {separator: true},
