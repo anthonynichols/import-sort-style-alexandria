@@ -12,7 +12,8 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p src",
-    "prepublish": "npm run build && npm run test",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build && npm run test",
     "postversion": "git push && git push --tags",
     "release:major": "npm version major && npm publish",
     "release:minor": "npm version minor && npm publish",
