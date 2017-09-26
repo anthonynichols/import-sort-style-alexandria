@@ -12,7 +12,11 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p src",
-    "prepublish": "npm run build",
+    "prepublish": "npm run build && npm run test",
+    "postversion": "git push && git push --tags",
+    "release:major": "npm version major && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:patch": "npm version patch && npm publish",
     "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
     "watch": "tsc -p src -w",
     "watch:test": "mocha -w --compilers ts:ts-node/register,tsx:ts-node/register --recursive test"
