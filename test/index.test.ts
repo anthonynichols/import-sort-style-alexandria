@@ -28,6 +28,26 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     assert.equal(applyChanges(code, changes), expected);
   });
 
+  it('should sort local root modules', async () => {
+    const { code, expected } = await import('./fixtures/local-root-modules');
+    const result = sortImports(code, parser, ALEXANDRIA_STYLE);
+    const actual = result.code;
+    const changes = result.changes;
+
+    assert.equal(expected, actual);
+    assert.equal(applyChanges(code, changes), expected);
+  });
+
+  it('should sort named local root modules', async () => {
+    const { code, expected } = await import('./fixtures/named-local-root-modules');
+    const result = sortImports(code, parser, ALEXANDRIA_STYLE);
+    const actual = result.code;
+    const changes = result.changes;
+
+    assert.equal(expected, actual);
+    assert.equal(applyChanges(code, changes), expected);
+  });
+
   it('should sort local modules', async () => {
     const { code, expected } = await import('./fixtures/local-modules');
     const result = sortImports(code, parser, ALEXANDRIA_STYLE);
