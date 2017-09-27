@@ -2,11 +2,14 @@
   "compilerOptions": {
     "declaration": true,
     "module": "commonjs",
+    "moduleResolution": "node",
     "removeComments": true,
     "skipLibCheck": true,
     "target": "es2015"
   },
+
   "compileOnSave": false,
+
   "exclude": [
     "node_modules"
   ]
