@@ -29,16 +29,16 @@
     "import-sort-style": "^3.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.1",
-    "@types/mocha": "^2.2.41",
-    "@types/node": "^8.0.13",
-    "chai": "^4.1.0",
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.43",
+    "@types/node": "^8.0.31",
+    "chai": "^4.1.2",
     "import-sort": "^3.3.0",
     "import-sort-parser-babylon": "^3.2.0",
     "import-sort-parser-typescript": "^3.2.0",
-    "mocha": "^3.4.2",
-    "ts-node": "^3.2.0",
-    "tslint": "^5.5.0",
-    "typescript": "^2.4.1"
+    "mocha": "^3.5.3",
+    "ts-node": "^3.3.0",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.3"
   }
 }
