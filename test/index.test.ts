@@ -14,7 +14,7 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     const actual = result.code;
     const changes = result.changes;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
     assert.equal(applyChanges(code, changes), expected);
   });
 
@@ -24,27 +24,7 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     const actual = result.code;
     const changes = result.changes;
 
-    assert.equal(expected, actual);
-    assert.equal(applyChanges(code, changes), expected);
-  });
-
-  it('should sort local root modules', async () => {
-    const { code, expected } = await import('./fixtures/local-root-modules');
-    const result = sortImports(code, parser, ALEXANDRIA_STYLE);
-    const actual = result.code;
-    const changes = result.changes;
-
-    assert.equal(expected, actual);
-    assert.equal(applyChanges(code, changes), expected);
-  });
-
-  it('should sort named local root modules', async () => {
-    const { code, expected } = await import('./fixtures/named-local-root-modules');
-    const result = sortImports(code, parser, ALEXANDRIA_STYLE);
-    const actual = result.code;
-    const changes = result.changes;
-
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
     assert.equal(applyChanges(code, changes), expected);
   });
 
@@ -54,18 +34,24 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     const actual = result.code;
     const changes = result.changes;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
     assert.equal(applyChanges(code, changes), expected);
   });
 
   it('should sort named local modules', async () => {
-    const { code, expected } = await import('./fixtures/named-local-modules');
-    const result = sortImports(code, parser, ALEXANDRIA_STYLE);
-    const actual = result.code;
-    const changes = result.changes;
+    const { code, codeUnderscore, expected, expectedUnderscore } = await import('./fixtures/named-local-modules');
+    const result1 = sortImports(code, parser, ALEXANDRIA_STYLE);
+    const result2 = sortImports(codeUnderscore, parser, ALEXANDRIA_STYLE);
+    const actual1 = result1.code;
+    const actual2 = result2.code;
+    const changes1 = result1.changes;
+    const changes2 = result2.changes;
 
-    assert.equal(expected, actual);
-    assert.equal(applyChanges(code, changes), expected);
+    assert.equal(actual1, expected);
+    assert.equal(applyChanges(code, changes1), expected);
+    assert.equal(actual2, expectedUnderscore);
+    assert.equal(applyChanges(code, changes2), expectedUnderscore);
+
   });
 
   it('should sort relative modules', async () => {
@@ -74,7 +60,7 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     const actual = result.code;
     const changes = result.changes;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
     assert.equal(applyChanges(code, changes), expected);
   });
 
@@ -84,17 +70,22 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     const actual = result.code;
     const changes = result.changes;
 
-    assert.equal(expected, actual);
+    assert.equal(actual, expected);
     assert.equal(applyChanges(code, changes), expected);
   });
 
   it('should sort all of the things!', async () => {
-    const { code, expected } = await import('./fixtures/all-of-the-things');
-    const result = sortImports(code, parser, ALEXANDRIA_STYLE);
-    const actual = result.code;
-    const changes = result.changes;
+    const { code, codeUnderscore, expected, expectedUnderscore } = await import('./fixtures/all-of-the-things');
+    const result1 = sortImports(code, parser, ALEXANDRIA_STYLE);
+    const result2 = sortImports(codeUnderscore, parser, ALEXANDRIA_STYLE);
+    const actual1 = result1.code;
+    const actual2 = result2.code;
+    const changes1 = result1.changes;
+    const changes2 = result2.changes;
 
-    assert.equal(expected, actual);
-    assert.equal(applyChanges(code, changes), expected);
+    assert.equal(actual1, expected);
+    assert.equal(actual2, expectedUnderscore);
+    assert.equal(applyChanges(code, changes1), expected);
+    assert.equal(applyChanges(code, changes2), expectedUnderscore);
   });
 });

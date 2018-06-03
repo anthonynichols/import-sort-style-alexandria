@@ -11,18 +11,20 @@ import PropTypes from 'prop-types';
 import { aaa, bbb, ccc } from 'aaa';
 import { aaa, bbb, ccc } from 'bbb';
 
-// local root modules
-import * as Abathur from '@/Abathur';
-import * as Nova from '@/nova';
-import Dehaka from '@/Dehaka';
-import Kerrigan from '@/kerrigan';
-import { Morales } from '@/medic';
-import { Zeratul } from '@/Zeratul';
-
-// local modules
-import * as Alarak from '~/Alarak';
-import Tychus from '~/tychus';
-import { Raynor } from '~/Raynor';
+// local modules (either "~" or "_")
+import * as Abathur from '~/Abathur';
+import * as Nova from '~/nova';
+import Dehaka from '~/Dehaka';
+import Kerrigan from '~/kerrigan';
+import { Morales } from '~/medic';
+import { Zeratul } from '~/Zeratul';
+// or 
+import * as Abathur from '_/Abathur';
+import * as Nova from '_/nova';
+import Dehaka from '_/Dehaka';
+import Kerrigan from '_/kerrigan';
+import { Morales } from '_/medic';
+import { Zeratul } from '_/Zeratul';
 
 // relative modules
 import * as Artanis from './Artanis';
