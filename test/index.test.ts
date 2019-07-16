@@ -88,4 +88,14 @@ describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
     assert.equal(applyChanges(code, changes1), expected);
     assert.equal(applyChanges(code, changes2), expectedUnderscore);
   });
+
+  it('should sort the rando modules', async () => {
+    const {code, expected} = await import('./fixtures/rando-test');
+    const result1 = sortImports(code, parser, ALEXANDRIA_STYLE);
+    const actual1 = result1.code;
+    const changes1 = result1.changes;
+
+    assert.equal(actual1, expected);
+    assert.equal(applyChanges(code, changes1), expected);
+  });
 });
