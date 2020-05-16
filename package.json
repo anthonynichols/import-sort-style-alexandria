@@ -18,9 +18,9 @@
     "release:major": "npm version major && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:patch": "npm version patch && npm publish",
-    "test": "mocha --compilers ts:ts-node/register,tsx:ts-node/register --recursive test",
+    "test": "mocha --require ts-node/register 'test/index.test.ts'",
     "watch": "tsc -p src -w",
-    "watch:test": "mocha -w --compilers ts:ts-node/register,tsx:ts-node/register --recursive test"
+    "watch:test": "mocha -w --require ts-node/register 'test/index.test.ts'"
   },
   "keywords": [],
   "license": "MIT",
@@ -29,16 +29,16 @@
     "import-sort-style": "^6.0.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^10.14.12",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.1",
     "chai": "^4.2.0",
     "import-sort": "^6.0.0",
     "import-sort-parser-babylon": "^6.0.0",
     "import-sort-parser-typescript": "^6.0.0",
-    "mocha": "^5.2.0",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3"
+    "mocha": "^7.1.2",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "typescript": "^3.9.2"
   }
 }
