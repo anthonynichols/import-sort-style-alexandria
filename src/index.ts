@@ -1,125 +1,151 @@
-import { IMatcherFunction, IStyleAPI, IStyleItem } from 'import-sort-style';
-import { IImport, ImportType, NamedMember } from 'import-sort-parser';
+import {IStyleAPI, IStyleItem} from 'import-sort-style';
+
+import {IImport} from 'import-sort-parser';
 
 function isLocalModule(imported: IImport) {
-  return imported.moduleName.indexOf('~') === 0
-      || imported.moduleName.indexOf('_') === 0;
+  return (
+    imported.moduleName.startsWith('~') ||
+    imported.moduleName.startsWith('_')
+  );
 }
 
+function isStylesheet(imported: IImport) {
+  return (
+    imported.moduleName.endsWith('css') ||
+    imported.moduleName.endsWith('less') ||
+    imported.moduleName.endsWith('sass') ||
+    imported.moduleName.endsWith('scss') ||
+    imported.moduleName.endsWith('styl')
+  );
+}
 
 export default function(styleApi: IStyleAPI): IStyleItem[] {
   const {
     and,
-    hasDefaultMember,
-    hasNamedMembers,
-    hasNamespaceMember,
+    hasMember,
     hasNoMember,
-    hasOnlyDefaultMember,
-    hasOnlyNamedMembers,
-    hasOnlyNamespaceMember,
     isAbsoluteModule,
     isRelativeModule,
-    member,
     moduleName,
     name,
-    naturally,
     not,
-    or,
-    startsWithAlphanumeric,
-    startsWithLowerCase,
-    startsWithUpperCase,
     unicode,
   } = styleApi;
 
+  function customSort(a: string, b: string) {
+    let _a = a.replace(/(\.*\/)+/, '\.\/');
+    let _b = b.replace(/(\.*\/)+/, '\.\/');
+    return unicode(_a.toLowerCase(), _b.toLowerCase());
+  }
+
   return [
-    // import 'module'
-    {match: and(hasNoMember, isAbsoluteModule)},
+    // * ----------------------------------------------------------------------
+    // * Import side effects
+    // * ----------------------------------------------------------------------
+
+    // * import 'module'
+    {
+      match: and(hasNoMember, isAbsoluteModule, not(isLocalModule), not(isStylesheet)),
+      sort: moduleName(customSort),
+    },
 
     {separator: true},
 
-    // import '~/local-module' or '_/local-module'
-    {match: and(hasNoMember, isLocalModule)},
+    // * import '~/local-module' or '_/local-module'
+    {
+      match: and(hasNoMember, isLocalModule, not(isStylesheet)),
+      sort: moduleName(customSort),
+    },
 
     {separator: true},
 
-    // import './relative-module'
-    {match: and(hasNoMember, isRelativeModule)},
+    // * import './relative-module'
+    {
+      match: and(hasNoMember, isRelativeModule, not(isStylesheet)),
+      sort: moduleName(customSort),
+    },
 
     {separator: true},
 
-    // import * as _ from 'module'
-    {match: and(hasOnlyNamespaceMember, isAbsoluteModule, not(isLocalModule), not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import * as (m|M)odule from 'module'
-    {match: and(hasOnlyNamespaceMember, isAbsoluteModule, not(isLocalModule)), sort: moduleName(naturally)},
-    // import _, * as (m|M)odule from 'module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, not(isLocalModule), not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import (m|M)odule, * as _ from 'module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, not(isLocalModule), or(member(startsWithAlphanumeric), not(member(startsWithAlphanumeric)))), sort: moduleName(naturally)},
-    // import (m|M)odule, * as (o|O)therModule from 'module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isAbsoluteModule, not(isLocalModule), member(startsWithAlphanumeric)), sort: moduleName(naturally)},
-    // import _ from 'module'
-    {match: and(hasOnlyDefaultMember, isAbsoluteModule, not(isLocalModule), not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import (m|M)odule from 'module'
-    {match: and(hasOnlyDefaultMember, isAbsoluteModule, not(isLocalModule), member(startsWithAlphanumeric)), sort: moduleName(naturally)},
-    // import _, { (m|M)odule, ... } from 'module'
-    {match: and(hasDefaultMember, hasNamedMembers, isAbsoluteModule, not(isLocalModule), not(member(startsWithAlphanumeric))), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import (m|M)odule, { (o|O)therModule, ... } from 'module'
-    {match: and(hasDefaultMember, hasNamedMembers, isAbsoluteModule, not(isLocalModule), member(startsWithAlphanumeric)), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import { _, (m|M)odule, ... } from 'module'
-    {match: and(hasOnlyNamedMembers, isAbsoluteModule, not(isLocalModule), not(member(startsWithAlphanumeric))), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import { (m|M)odule, ... } from 'module'
-    {match: and(hasOnlyNamedMembers, isAbsoluteModule, not(isLocalModule), member(startsWithAlphanumeric)), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
+    // * ----------------------------------------------------------------------
+    // * Import external
+    // * ----------------------------------------------------------------------
+
+    // * import * as foo | foo | {foo} from 'module'
+    {
+      match: and(hasMember, isAbsoluteModule, not(isLocalModule), not(isStylesheet)),
+      sort: moduleName(customSort),
+      sortNamedMembers: name(customSort),
+    },
 
     {separator: true},
 
-    // import * as _ from '~/local-module' or '_/local-module'
-    {match: and(hasOnlyNamespaceMember, isLocalModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import * as Module from '~/local-module' or '_/local-module'
-    {match: and(hasOnlyNamespaceMember, isLocalModule), sort: moduleName(naturally)},
-    // import _, * as (m|M)odule from '~/local-module' or '_/local-module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isLocalModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import (m|M)odule, * as _ from '~/local-module' or '_/local-module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isLocalModule, or(member(startsWithAlphanumeric), not(member(startsWithAlphanumeric)))), sort: moduleName(naturally)},
-    // import (m|M)odule, * as (o|O)therModule from '~/local-module' or '_/local-module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isLocalModule, member(startsWithAlphanumeric)), sort: moduleName(naturally)},
-    // import _ from '~/local-module' or '_/local-module'
-    {match: and(hasOnlyDefaultMember, isLocalModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import (m|M)odule from '~/local-module' or '_/local-module'
-    {match: and(hasOnlyDefaultMember, isLocalModule, member(startsWithAlphanumeric)), sort: moduleName(naturally)},
-    // import _, { (m|M)odule, ... } from '~/local-module' or '_/local-module'
-    {match: and(hasDefaultMember, hasNamedMembers, isLocalModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import (m|M)odule, { (o|O)therModule, ... } from '~/local-module' or '_/local-module'
-    {match: and(hasDefaultMember, hasNamedMembers, isLocalModule, member(startsWithAlphanumeric)), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import { _, (m|M)odule, ... } from '~/local-module' or '_/local-module'
-    {match: and(hasOnlyNamedMembers, isLocalModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import { (m|M)odule, ... } from '~/local-module' or '_/local-module'
-    {match: and(hasOnlyNamedMembers, isLocalModule), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
+    // * ----------------------------------------------------------------------
+    // * Import internal using prefix
+    // * ----------------------------------------------------------------------
+
+    // * import * as foo | foo | {foo} from '~/module' | '_/module'
+    {
+      match: and(hasMember, isLocalModule, not(isStylesheet)),
+      sort: moduleName(customSort),
+      sortNamedMembers: name(customSort),
+    },
 
     {separator: true},
 
-    // import * as _ from './module'
-    {match: and(hasOnlyNamespaceMember, isRelativeModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import * as Module from './module]'
-    {match: and(hasOnlyNamespaceMember, isRelativeModule), sort: moduleName(naturally)},
-    // import _, * as (m|M)odule from './module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isRelativeModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import (m|M)odule, * as _ from './module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isRelativeModule, or(member(startsWithAlphanumeric), not(member(startsWithAlphanumeric)))), sort: moduleName(naturally)},
-    // import (m|M)odule, * as (o|O)therModule from './module'
-    {match: and(hasDefaultMember, hasNamespaceMember, isRelativeModule, member(startsWithAlphanumeric)), sort: moduleName(naturally)},
-    // import _ from './module'
-    {match: and(hasOnlyDefaultMember, isRelativeModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally)},
-    // import (m|M)odule from './module'
-    {match: and(hasOnlyDefaultMember, isRelativeModule, member(startsWithAlphanumeric)), sort: moduleName(naturally)},
-    // import _, { (m|M)odule, ... } from './module'
-    {match: and(hasDefaultMember, hasNamedMembers, isRelativeModule, not(member(startsWithAlphanumeric))), sortNamedMembers: name(naturally)},
-    // import (m|M)odule, { (o|O)therModule, ... } from './module'
-    {match: and(hasDefaultMember, hasNamedMembers, isRelativeModule, member(startsWithAlphanumeric)), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import { _, (m|M)odule, ... } from './module'
-    {match: and(hasOnlyNamedMembers, isRelativeModule, not(member(startsWithAlphanumeric))), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
-    // import { (m|M)odule, ... } from './module'
-    {match: and(hasOnlyNamedMembers, isRelativeModule, member(startsWithAlphanumeric)), sort: moduleName(naturally), sortNamedMembers: name(naturally)},
+    // * ----------------------------------------------------------------------
+    // * Import internal using relative
+    // * ----------------------------------------------------------------------
+
+    // * import * as foo | foo | {foo} from './module'
+    {
+      match: and(hasMember, isRelativeModule, not(isStylesheet)),
+      sort: moduleName(customSort),
+      sortNamedMembers: name(customSort),
+    },
 
     {separator: true},
+
+    // * ----------------------------------------------------------------------
+    // * Import stylesheet
+    // * ----------------------------------------------------------------------
+
+    // * import styles from 'stylesheet.css|less|sass|scss|styl'
+    {
+      match: and(hasMember, isAbsoluteModule, not(isLocalModule), isStylesheet),
+      sort: moduleName(customSort),
+    },
+
+    // * import 'stylesheet.css|less|sass|scss|styl'
+    {
+      match: and(hasNoMember, isAbsoluteModule, not(isLocalModule), isStylesheet),
+      sort: moduleName(customSort),
+    },
+
+    {separator: true},
+
+    // * import styles from '~/local-stylesheet.css|less|sass|scss|styl' or '_/local-stylesheet.css|less|sass|scss|styl'
+    {
+      match: and(hasMember, isLocalModule, isStylesheet),
+      sort: moduleName(customSort),
+    },
+
+    // * import styles from './relative-module'
+    {
+      match: and(hasMember, isRelativeModule, isStylesheet),
+      sort: moduleName(customSort),
+    },
+
+    // * import '~/local-stylesheet.css|less|sass|scss|styl' or '_/local-stylesheet.css|less|sass|scss|styl'
+    {
+      match: and(hasNoMember, isLocalModule, isStylesheet),
+      sort: moduleName(customSort),
+    },
+
+    // * import './relative-module'
+    {
+      match: and(hasNoMember, isRelativeModule, isStylesheet),
+      sort: moduleName(customSort),
+    },
   ];
 }

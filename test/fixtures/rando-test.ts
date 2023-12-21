@@ -9,11 +9,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 `.trim() + '\n';
 
 export const expected = `
-import React from 'react';
 import {faBoxCheck} from '@fortawesome/pro-light-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
+import React from 'react';
 
 import {SignUp} from './SignUp';
 `.trim() + '\n';

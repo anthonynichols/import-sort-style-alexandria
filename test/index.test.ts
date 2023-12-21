@@ -1,11 +1,10 @@
 import 'mocha';
 
-import * as parser from 'import-sort-parser-typescript';
+import * as parser from 'import-sort-parser-typescript4';
 import { applyChanges, sortImports } from 'import-sort';
-import { assert } from 'chai';
-import { IStyle, IStyleAPI, IStyleItem } from 'import-sort-style';
 
 import ALEXANDRIA_STYLE from '../src';
+import { assert } from 'chai';
 
 describe('sortImports (typescript, ALEXANDRIA_STYLE)', () => {
   it('should sort external modules', async () => {
